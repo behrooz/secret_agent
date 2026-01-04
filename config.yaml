@@ -1,0 +1,11 @@
+api:
+  endpoint: "http://localhost:8080/api/v1/secrets/access"
+  accessKey: "ak_2d13da500ea7fb164fcc8d20360d3d835a4369547684ab7b5ba5ee29ec8b62f9"
+  secretKey: "sk_cffdd24a34fbe9fab30e87d03074527b6fb9883ac7e01797337907d054f0e920"
+  secretName: "database-credentials"
+
+kubernetes:
+  namespace: "default"
+  secretName: "database-credentials"
+  # Optional: if not set, will use the secret name from API response
+
