@@ -1,0 +1,31 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            [registry."188.132.232.168:30724"]
+              http = true
+              insecure = true              
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: 188.132.232.168:30724/secret-sync-operator:${{ github.run_number }}
+          cache-from: type=registry,ref=188.132.232.168:30724/secret-sync-operator:latest
+          cache-to: type=inline
+
