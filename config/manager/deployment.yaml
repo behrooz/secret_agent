@@ -1,0 +1,83 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secret-sync-system
+
+---
+# Store the API credentials as a K8s Secret in the operator namespace.
+# These are the "built-in" configs users never see in their SecretSync CRD.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secret-sync-operator-config
+  namespace: secret-sync-system
+type: Opaque
+stringData:
+  SECRET_API_ENDPOINT: "http://your-api-service/api/v1/secrets/access"
+  SECRET_API_ACCESS_KEY: "ak_your_access_key_here"
+  SECRET_API_SECRET_KEY: "sk_your_secret_key_here"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secret-sync-operator
+  namespace: secret-sync-system
+  labels:
+    app: secret-sync-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secret-sync-operator
+  template:
+    metadata:
+      labels:
+        app: secret-sync-operator
+    spec:
+      serviceAccountName: secret-sync-operator
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      containers:
+        - name: operator
+          image: yourorg/secret-sync-operator:latest
+          imagePullPolicy: Always
+          args:
+            - --leader-elect
+          # Load API credentials from the Secret above.
+          # Users only need to set secretName in their SecretSync CRDs.
+          envFrom:
+            - secretRef:
+                name: secret-sync-operator-config
+          ports:
+            - name: metrics
+              containerPort: 8080
+            - name: health
+              containerPort: 8081
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: health
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: health
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
