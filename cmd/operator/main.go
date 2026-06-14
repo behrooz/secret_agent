@@ -10,6 +10,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	syncv1alpha1 "github.com/yourorg/secret-operator/internal/api/v1alpha1"
 	"github.com/yourorg/secret-operator/internal/controller"
@@ -38,7 +39,6 @@ func main() {
 	opts := zap.Options{Development: true}
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
 
-	// Load built-in API config from environment variables once at startup
 	apiConfig, err := controller.LoadAPIConfig()
 	if err != nil {
 		setupLog.Error(err, "Failed to load API config from environment variables")
@@ -46,9 +46,10 @@ func main() {
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		Scheme:                 scheme,
-		MetricsBindAddress:     metricsAddr,
-		Port:                   9443,
+		Scheme: scheme,
+		Metrics: metricsserver.Options{
+			BindAddress: metricsAddr,
+		},
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
 		LeaderElectionID:       "secret-sync-operator-lock",
