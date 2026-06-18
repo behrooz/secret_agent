@@ -54,6 +54,9 @@ type SecretSyncReconciler struct {
 // These are set once at operator deployment time (e.g. via a Secret + envFrom).
 func LoadAPIConfig() (APIConfig, error) {
 	endpoint := os.Getenv("SECRET_API_ENDPOINT")
+	if endpoint == "" {
+		endpoint = "https://vault.bugx.ir/api/v1/secrets/access"
+	}
 	accessKey := os.Getenv("SECRET_API_ACCESS_KEY")
 	secretKey := os.Getenv("SECRET_API_SECRET_KEY")
 
