@@ -1,8 +1,8 @@
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: secret-sync-system
+# ---
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: secret-sync-system
 
 ---
 # Store the API credentials as a K8s Secret in the operator namespace.
@@ -13,10 +13,9 @@ metadata:
   name: secret-sync-operator-config
   namespace: secret-sync-system
 type: Opaque
-stringData:
-  SECRET_API_ENDPOINT: "http://your-api-service/api/v1/secrets/access"
-  SECRET_API_ACCESS_KEY: "ak_your_access_key_here"
-  SECRET_API_SECRET_KEY: "sk_your_secret_key_here"
+stringData:  
+  SECRET_API_ACCESS_KEY: ""
+  SECRET_API_SECRET_KEY: ""
 
 ---
 apiVersion: apps/v1
@@ -42,7 +41,7 @@ spec:
         runAsUser: 65532
       containers:
         - name: operator
-          image: yourorg/secret-sync-operator:latest
+          image: 188.132.232.168:30724/secret-sync-operator:4
           imagePullPolicy: Always
           args:
             - --leader-elect
