@@ -64,7 +64,7 @@ docker push your-registry/secret-sync-operator:latest
 kubectl apply -f config/crd/secretsyncs.yaml
 
 # Verify
-kubectl get crd secretsyncs.sync.yourorg.io
+kubectl get crd secretsyncs.sync.bugx.ir
 ```
 
 ### Step 3 — Set your API credentials
@@ -97,7 +97,7 @@ kubectl get pods -n secret-sync-system
 The simplest form — just provide the secret name:
 
 ```yaml
-apiVersion: sync.yourorg.io/v1alpha1
+apiVersion: sync.bugx.ir/v1alpha1
 kind: SecretSync
 metadata:
   name: my-auth-secrets
@@ -210,7 +210,7 @@ kubectl exec my-app -- env | grep -i db
 ## SecretSync Full Spec Reference
 
 ```yaml
-apiVersion: sync.yourorg.io/v1alpha1
+apiVersion: sync.bugx.ir/v1alpha1
 kind: SecretSync
 metadata:
   name: example

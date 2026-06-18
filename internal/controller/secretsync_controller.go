@@ -77,8 +77,8 @@ func LoadAPIConfig() (APIConfig, error) {
 	}, nil
 }
 
-// +kubebuilder:rbac:groups=sync.yourorg.io,resources=secretsyncs,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=sync.yourorg.io,resources=secretsyncs/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=sync.bugx.ir,resources=secretsyncs,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=sync.bugx.ir,resources=secretsyncs/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups="",resources=namespaces,verbs=get;list;watch
 
@@ -192,13 +192,13 @@ func (r *SecretSyncReconciler) upsertSecret(
 			Name:      name,
 			Namespace: namespace,
 			Labels: map[string]string{
-				"app.kubernetes.io/managed-by":          "secret-sync-operator",
-				"secretsync.yourorg.io/owner-name":      owner.Name,
-				"secretsync.yourorg.io/owner-namespace": owner.Namespace,
+				"app.kubernetes.io/managed-by":       "secret-sync-operator",
+				"secretsync.bugx.ir/owner-name":      owner.Name,
+				"secretsync.bugx.ir/owner-namespace": owner.Namespace,
 			},
 			Annotations: map[string]string{
-				"secretsync.yourorg.io/api-secret-name": apiResponse.Name,
-				"secretsync.yourorg.io/description":     apiResponse.Description,
+				"secretsync.bugx.ir/api-secret-name": apiResponse.Name,
+				"secretsync.bugx.ir/description":     apiResponse.Description,
 			},
 		},
 		Type: corev1.SecretTypeOpaque,

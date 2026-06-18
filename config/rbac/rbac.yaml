@@ -12,13 +12,13 @@ metadata:
   name: secret-sync-operator
 rules:
   # Manage SecretSync CRDs
-  - apiGroups: ["sync.yourorg.io"]
+  - apiGroups: ["sync.bugx.ir"]
     resources: ["secretsyncs"]
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-  - apiGroups: ["sync.yourorg.io"]
+  - apiGroups: ["sync.bugx.ir"]
     resources: ["secretsyncs/status"]
     verbs: ["get", "update", "patch"]
-  - apiGroups: ["sync.yourorg.io"]
+  - apiGroups: ["sync.bugx.ir"]
     resources: ["secretsyncs/finalizers"]
     verbs: ["update"]
   # Manage Kubernetes Secrets
